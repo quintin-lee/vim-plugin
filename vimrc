@@ -180,6 +180,19 @@ let Tlist_Enable_Fold_Column   = 1
 " autocmd VimEnter * nested :Tlist
 map <F3> :TlistToggle<CR>
 
+autocmd BufEnter __Tag_List__ nested call Window_Exit_Only_TagList_NERDTree()
+
+function! Window_Exit_Only_TagList_NERDTree()
+    if winbufnr(3) == -1 && exists('g:NERDTree') && g:NERDTree.IsOpen()
+        if tabpagenr('$') == 1
+            bdelete
+            quit
+        else
+            close
+        endif
+    endif
+endfunction
+
 " ==========================================================================================
 " 配置自动补全插件
 " ==========================================================================================
