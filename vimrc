@@ -31,6 +31,10 @@ nmap <leader>bp   :bp<CR>
 " 删除行尾空格和 tab
 nmap <leader>dts  :%s/\s\+$//g<CR>
 
+" YCM 插件快捷键
+nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
+nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 " ==========================================================================================
 " Vim plugin manager
 " Make sure you use sigle quotes
@@ -44,8 +48,8 @@ call plug#begin('~/.vim/plugged')
   Plug 'vim-scripts/taglist.vim'                           " 代码导航工具
   "Plug 'majutsushi/tagbar'                                 " 代码导航工具
   Plug 'L9'                                                " acp 自动补全需要该库
-  Plug 'AutoComplPop'                                      " acp 自动补全插件
-  Plug 'OmniCppComplete'                                   " c++ 补全插件
+  "Plug 'AutoComplPop'                                      " acp 自动补全插件
+  "Plug 'OmniCppComplete'                                   " c++ 补全插件
   Plug 'SuperTab'                                          " 加强 tab 补全功能
   Plug 'vim-airline'                                       " 状态栏插件
   Plug 'Raimondi/delimitMate'                              " 自动补全括号,引号
@@ -67,7 +71,8 @@ call plug#begin('~/.vim/plugged')
   Plug 'suan/vim-instant-markdown'
   Plug 'instant-markdown.vim'
   Plug 'isnowfy/python-vim-instant-markdown'
-"  Plug 'Valloric/YouCompleteMe'
+  Plug 'Valloric/YouCompleteMe'
+  "Plug 'SirVer/ultisnips'
 call plug#end()
 
 " ==========================================================================================
@@ -107,7 +112,7 @@ set tags+=~/.vim/tags/tags
 set nocp
 filetype plugin on
 set ofu=syntaxcomplete#Complete
-set completeopt=menu,menuone        " 关闭智能补全时的预览窗口
+"set completeopt=menu,menuone        " 关闭智能补全时的预览窗口
 " set foldenable
 " set foldmethod=syntax
 " set foldlevel=4
@@ -180,6 +185,7 @@ let Tlist_Enable_Fold_Column   = 1
 " autocmd VimEnter * nested :Tlist
 map <F3> :TlistToggle<CR>
 
+" 当vim退出时，自动退出 taglist 和 NERDTree
 autocmd BufEnter __Tag_List__ nested call Window_Exit_Only_TagList_NERDTree()
 
 function! Window_Exit_Only_TagList_NERDTree()
@@ -257,6 +263,34 @@ if !exists('g:easy_align_delimiters')
 endif
 let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String'] }
 
+" ==========================================================================================
+" YouCompleteMe 配置
+" ==========================================================================================
+set completeopt=menu,menuone
+autocmd CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif  " 离开插入模式退出补全预览
+" 回车选中
+inoremap <expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
+let g:ycm_global_ycm_extra_conf='~/.vim/plugged/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_confirm_extra_conf = 0
+"let g:ycm_collect_identifiers_from_tags_files=1
+let g:ycm_min_num_of_chars_for_completion=2
+"let g:ycm_cache_omnifunc=0
+"let g:ycm_seed_identifiers_with_syntax=1
+"let g:ycm_complete_in_comments = 1
+"let g:ycm_complete_in_strings = 1
+"let g:ycm_collect_identifiers_from_comments_and_strings = 0
+let g:ycm_semantic_triggers = {
+            \ 'c': ['->', '.', '&', '   ', ' ', '('],
+            \ 'cpp': ['->', '.', '&', '::', '   ', ' ', '(']
+            \}
+
+" ==========================================================================================
+" DoxyGen-Syntax 配置
+" ==========================================================================================
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+let g:UltiSnipsSnippetDirectories=["snippets", "plugged/ultisnips/UltiSnips"]
 " ==========================================================================================
 " DoxyGen-Syntax 配置
 " ==========================================================================================
